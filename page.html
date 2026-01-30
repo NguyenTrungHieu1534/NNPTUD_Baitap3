@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Posts CRUD</title>
+  <script defer src="main.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    /* Products table - alternating black and white rows */
+    .product-row.even {
+      background-color: #ffffff;
+    }
+
+    .product-row.odd {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    .product-row.odd td {
+      color: #ffffff;
+    }
+
+    .product-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .product-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 2px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .product-image:hover {
+      transform: scale(1.1);
+      z-index: 10;
+      position: relative;
+    }
+
+    .image-count {
+      font-size: 12px;
+      color: #666;
+      margin-left: 5px;
+    }
+
+    .product-row.odd .image-count {
+      color: #ccc;
+    }
+
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .controls label {
+      margin-right: 5px;
+    }
+
+    .controls select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      margin: 10px auto;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Posts</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Views</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="post-body"></tbody>
+</table>
+
+<h3>Add / Update Post</h3>
+<input type="text" id="id_txt" placeholder="ID (leave empty to create)">
+<input type="text" id="title_txt" placeholder="Title">
+<input type="text" id="views_txt" placeholder="Views">
+<button onclick="savePost()">Save</button>
+
+<hr>
+
+<h2>Comments</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <td>ID</td>
+      <td>Text</td>
+      <td>Post ID</td>
+      <td>Action</td>
+    </tr>
+  </thead>
+  <tbody id="comment-body"></tbody>
+</table>
+
+<h3>Add / Update Comment</h3>
+<input type="text" id="comment_id_txt" placeholder="ID (leave empty to create)">
+<input type="text" id="comment_text_txt" placeholder="Text">
+<input type="text" id="comment_postId_txt" placeholder="Post ID">
+<button onclick="saveComment()">Save</button>
+
+<hr>
+
+<h2>Products Management</h2>
+
+<input type="text" id="product-search" placeholder="Tìm kiếm theo title" onchange="handleProductSearch(event)" oninput="handleProductSearch(event)">
+
+<div class="controls">
+  <label for="product-itemsPerPage">Số sản phẩm mỗi trang:</label>
+  <select id="product-itemsPerPage" onchange="handleItemsPerPageChange(parseInt(this.value))">
+    <option value="5">5</option>
+    <option value="10" selected>10</option>
+    <option value="20">20</option>
+  </select>
+</div>
+
+<div class="controls">
+  <button onclick="sortProductsByPrice('asc')">Sắp xếp theo giá tăng dần</button>
+  <button onclick="sortProductsByPrice('desc')">Sắp xếp theo giá giảm dần</button>
+  <button onclick="sortProductsByTitle('asc')">Sắp xếp theo tên tăng dần</button>
+  <button onclick="sortProductsByTitle('desc')">Sắp xếp theo tên giảm dần</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Images</th>
+    </tr>
+  </thead>
+  <tbody id="product-body"></tbody>
+</table>
+
+<div class="controls">
+  <button onclick="goToPreviousPage()">Trang trước</button>
+  <span id="page-info">Trang 1</span>
+  <button onclick="goToNextPage()">Trang sau</button>
+</div>
+
+</body>
+</html>
